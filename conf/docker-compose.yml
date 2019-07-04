@@ -1,0 +1,34 @@
+version: "3"
+services:
+  gns3:
+    image: ncsurfus/gns3
+    privileged: true
+    restart: unless-stopped
+    networks:
+      skynet:
+        ipv4_address: 172.28.1.1
+    volumes:
+      - gns3Docker:/var/lib/docker
+      - /persist/gns3/root/:/root/
+  vpn:
+    build: ./vpn/
+    privileged: true
+    restart: unless-stopped
+    networks:
+      skynet:
+        ipv4_address: 172.28.1.2
+    environment:
+      - VPN_IPSEC_PSK=test
+      - VPN_USER=ncsurfus
+      - VPN_PASSWORD=test
+    ports:
+      - "500:500/udp"
+      - "4500:4500/udp"
+volumes:
+  gns3Docker:
+networks:
+  skynet:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.0.0/16
