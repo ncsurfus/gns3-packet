@@ -7,7 +7,7 @@ output "network" {
 }
 
 resource "packet_device" "gns3_svr" {
-  hostname         = "gns3_svr"
+  hostname         = "gns3-svr"
   plan             = "t1.small.x86"
   facilities       = ["ewr1"]
   operating_system = "ubuntu_18_04"
