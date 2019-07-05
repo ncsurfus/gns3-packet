@@ -1,7 +1,7 @@
 version: "3"
 services:
   gns3:
-    build: ./gns3u/
+    build: ./gns3/
     privileged: true
     restart: unless-stopped
     networks:
