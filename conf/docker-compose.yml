@@ -6,10 +6,19 @@ services:
     restart: unless-stopped
     networks:
       skynet:
-        ipv4_address: 172.28.1.1
+        ipv4_address: 172.28.1.3
     volumes:
       - gns3Docker:/var/lib/docker
       - /persist/gns3/root/:/root/
+  gns3a:
+    build: ./gns3alpine/
+    privileged: true
+    restart: unless-stopped
+    networks:
+      skynet:
+        ipv4_address: 172.28.1.1
+    volumes:
+      - /persist/gns3a/:/data/
   vpn:
     build: ./vpn/
     privileged: true
