@@ -18,7 +18,7 @@ resource "packet_device" "gns3_svr" {
     type        = "ssh"
     host        = "${self.access_public_ipv4}"
     user        = "root"
-    private_key = "${file(var.ssh_key)}"
+    private_key = "${file(var.ssh_private_key)}"
     timeout     = "120s"
   }
 
@@ -29,12 +29,26 @@ resource "packet_device" "gns3_svr" {
 
   provisioner "remote-exec" {
     inline = [
-      "apt-get update",
-      "apt-get install -y --no-install-recommends docker.io docker-compose",
+      "export DEBIAN_FRONTEND=noninteractive",
       "curl 'https://www.duckdns.org/update?domains=${var.duckdns_domain}&token=${var.duckdns_token}'",
+      "apt-get update",
+      "apt-get install -y software-properties-common docker.io docker-compose python-pip",
       "systemctl start docker",
       "systemctl enable docker",
-      "docker-compose -f ~/docker-compose.yml up -d"
+      "pip install --upgrade b2",
+      "mkdir /data/",
+      "b2 authorize-account ${var.b2_account_id} ${var.b2_application_key}",
+      "b2 sync --delete --replaceNewer ${var.b2_path} /data/",
+      "docker-compose up -d"
+    ]
+  }
+
+  provisioner "remote-exec" {
+    when    = "destroy"
+    inline = [
+      "docker-compose down",
+      "b2 authorize-account ${var.b2_account_id} ${var.b2_application_key}",
+      "b2 sync --delete --replaceNewer --excludeRegex '.*\\.ghost' /data/ ${var.b2_path}"
     ]
   }
 }
