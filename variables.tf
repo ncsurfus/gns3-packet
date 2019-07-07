@@ -15,15 +15,15 @@ variable "packet_project" {
 }
 
 variable "b2_account_id" {
-    description = "The packet.net storage volume id. Example: 9ea63f0a-a169-45cc-9ee2-1234eacda81f"
+    description = "This is the BackBlaze KeyID in the 'App Keys' section."
 }
 
 variable "b2_application_key" {
-    description = "The packet.net storage volume name. Example: volume-9ea63f0a-part1"
+    description = "This is the key that was provided when creating an application key in BackBlaze."
 }
 
 variable "b2_path" {
-    description = "The packet.net storage volume name. Example: volume-9ea63f0a-part1"
+    description = "The path to the BackBlaze bucket. Example: b2://gns3-packet/test/"
 }
 
 variable "ssh_private_key" {
