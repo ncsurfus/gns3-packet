@@ -19,7 +19,6 @@ resource "packet_device" "gns3_svr" {
     host        = "${self.access_public_ipv4}"
     user        = "root"
     private_key = "${file(var.ssh_private_key)}"
-    timeout     = "120s"
   }
 
   provisioner "file" {
@@ -29,16 +28,18 @@ resource "packet_device" "gns3_svr" {
 
   provisioner "remote-exec" {
     inline = [
-      "export DEBIAN_FRONTEND=noninteractive",
       "curl 'https://www.duckdns.org/update?domains=${var.duckdns_domain}&token=${var.duckdns_token}'",
       "apt-get update",
-      "apt-get install -y software-properties-common docker.io docker-compose python-pip",
+      "apt-get install -y docker.io docker-compose python-pip python-setuptools --no-install-recommends",
       "systemctl start docker",
       "systemctl enable docker",
       "pip install --upgrade b2",
       "mkdir /data/",
       "b2 authorize-account ${var.b2_account_id} ${var.b2_application_key}",
-      "b2 sync --delete --replaceNewer ${var.b2_path} /data/",
+      "b2 sync --replaceNewer --delete ${var.b2_path} /data/",
+      "echo 'VPN_PSK=${var.vpn_psk}' > .env",
+      "echo 'VPN_USERNAME=${var.vpn_username}' >> .env",
+      "echo 'VPN_PASSWORD=${var.vpn_password}' >> .env",
       "docker-compose up -d"
     ]
   }

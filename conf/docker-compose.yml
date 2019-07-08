@@ -1,7 +1,7 @@
 version: "3"
 services:
   gns3:
-    build: ./gns3/
+    image: ncsurfus/gns3:latest
     privileged: true
     restart: unless-stopped
     networks:
@@ -17,9 +17,9 @@ services:
       skynet:
         ipv4_address: 172.28.1.2
     environment:
-      - VPN_IPSEC_PSK=test
-      - VPN_USER=ncsurfus
-      - VPN_PASSWORD=test
+      - VPN_IPSEC_PSK=${VPN_PSK}
+      - VPN_USER=${VPN_USERNAME}
+      - VPN_PASSWORD=${VPN_PASSWORD}
     ports:
       - "500:500/udp"
       - "4500:4500/udp"

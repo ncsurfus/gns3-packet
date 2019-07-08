@@ -29,3 +29,15 @@ variable "b2_path" {
 variable "ssh_private_key" {
     description = "The SSH key used to connect to packet device, add files, and execute scripts."
 }
+
+variable "vpn_psk" {
+    description = "The VPN pre-shared key."
+}
+
+variable "vpn_username" {
+    description = "The VPN username."
+}
+
+variable "vpn_password" {
+    description = "The VPN password."
+}
